@@ -2,6 +2,8 @@
 
 Este proyecto es una aplicación web full-stack diseñada para la creación y gestión de publicaciones (Posts) e interacción entre usuarios mediante comentarios. Utiliza una arquitectura moderna separando el Backend (NestJS) y el Frontend (React + Vite).
 
+🔗 **[Ver Documentación Integral Detallada](https://deepwiki.com/omanias/MindFactory-Posts/1-overview)**
+
 ## 🚀 Funcionalidades Principales
 
 La aplicación permite a los usuarios interactuar de la siguiente manera:
