@@ -8,22 +8,23 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-    imports: [
-        UsersModule,
-        PassportModule,
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET') || 'fallback_secret',
-                signOptions: {
-                    expiresIn: configService.get<string>('JWT_EXPIRES_IN') as any || '1d',
-                },
-            }),
-        }),
-    ],
-    providers: [AuthService, JwtStrategy],
-    controllers: [AuthController],
-    exports: [AuthService],
+  imports: [
+    UsersModule,
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'fallback_secret',
+        signOptions: {
+          expiresIn:
+            (configService.get<string>('JWT_EXPIRES_IN') as any) || '1d',
+        },
+      }),
+    }),
+  ],
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

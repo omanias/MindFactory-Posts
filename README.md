@@ -28,6 +28,7 @@ La aplicación permite a los usuarios interactuar de la siguiente manera:
 *   **Base de Datos:** PostgreSQL.
 *   **ORM:** TypeORM.
 *   **Autenticación:** Passport y JWT.
+*   **Logging:** Winston (Registro de logs en consola y archivos).
 *   **Documentación API:** [Swagger](https://swagger.io/) (Interfaz interactiva para endpoints).
 
 ### Frontend
@@ -39,6 +40,42 @@ La aplicación permite a los usuarios interactuar de la siguiente manera:
 
 ### Infraestructura
 *   **Contenedores:** Docker y Docker Compose (para la persistencia de datos con PostgreSQL).
+
+## 📊 Diagrama de Base de Datos
+
+A continuación se muestra la estructura de las tablas y sus relaciones:
+
+```mermaid
+erDiagram
+    USERS {
+        serial4 id PK
+        varchar name
+        varchar email
+        varchar password
+        timestamp createdAt
+    }
+    POSTS {
+        serial4 id PK
+        varchar title
+        text content
+        timestamp createdAt
+        int4 user_id FK
+        int4_array likedBy
+        int4_array dislikedBy
+    }
+    COMMENTS {
+        serial4 id PK
+        text content
+        int4 user_id FK
+        int4 post_id FK
+        timestamp createdAt
+    }
+
+    USERS ||--o{ POSTS : "crea"
+    USERS ||--o{ COMMENTS : "escribe"
+    POSTS ||--o{ COMMENTS : "contiene"
+```
+
 
 ## 📋 Requisitos Previos
 
@@ -68,7 +105,8 @@ pnpm install
 pnpm run start:dev
 ```
 Servidor backend disponible en `http://localhost:3000`.
-**Swagger API Docs:** `http://localhost:3000/api` (Disponible al iniciar el servidor).
+**Swagger API Docs:** `http://localhost:3000/api/docs` (Disponible al iniciar el servidor).
+
 
 ### 3. Configuración del Frontend
 

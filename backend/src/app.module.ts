@@ -10,12 +10,15 @@ import { CommentsModule } from './comments/comments.module';
 import { Post } from './posts/post.entity';
 import { User } from './users/user.entity';
 import { Comment } from './comments/comment.entity';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './common/logger/winston.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    WinstonModule.forRoot(winstonConfig),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -38,4 +41,4 @@ import { Comment } from './comments/comment.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

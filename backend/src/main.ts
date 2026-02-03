@@ -1,21 +1,31 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './common/logger/winston.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger(winstonConfig),
+  });
+
   app.enableCors();
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   // Configuración de Swagger
   const config = new DocumentBuilder()
     .setTitle('MindFactory Posts API')
-    .setDescription('API para la plataforma de publicaciones MindFactory. Permite gestionar usuarios, publicaciones y comentarios.')
+    .setDescription(
+      'API para la plataforma de publicaciones MindFactory. Permite gestionar usuarios, publicaciones y comentarios.',
+    )
     .setVersion('1.0')
     .addTag('auth', 'Endpoints de autenticación')
     .addTag('users', 'Endpoints de gestión de usuarios')
@@ -41,8 +51,15 @@ async function bootstrap() {
     customCss: '.swagger-ui .topbar { display: none }',
   });
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`🚀 Application is running on: http://localhost:${process.env.PORT ?? 3000}`);
-  console.log(`📚 Swagger documentation available at: http://localhost:${process.env.PORT ?? 3000}/api/docs`);
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+
+  logger.log(`🚀 Application is running on: http://localhost:${port}`);
+  logger.log(
+    `📚 Swagger documentation available at: http://localhost:${port}/api/docs`,
+  );
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Error during bootstrap', err);
+});
+
